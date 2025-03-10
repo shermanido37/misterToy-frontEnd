@@ -1,0 +1,28 @@
+.toy-list{
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, calc((100% - 5em) / 5));
+    gap: 1em;
+    place-content: center;
+}
+
+.toy-list li{
+    background-color: darkslategray;
+    padding: 0.5em;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.toy-list li h4{
+    margin-top: 0.1em;
+}
+
+.toy-list li .toy-buttons{
+    margin: 0.5em;
+    display: flex;
+    place-content: center;
+    gap: 1em;
+}

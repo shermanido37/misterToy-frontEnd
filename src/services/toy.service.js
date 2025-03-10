@@ -2,21 +2,6 @@ import { utilService } from "./util.service.js";
 import { storageService } from "./async-storage.service.js";
 
 const TOY_KEY = "toyDB";
-_createToys();
-
-export const toyService = {
-  labels,
-  query,
-  get,
-  remove,
-  save,
-  getEmptyToy,
-  getDefaultFilter,
-  getFilterFromSearchParams,
-  // getSpeedStats,
-  // getVendorStats,
-  // _createBooks,
-};
 
 const labels = [
   "On wheels",
@@ -29,21 +14,63 @@ const labels = [
   "Battery Powered",
 ];
 
+const STOCK_IGNORE = -1
+const STOCK_OUT = 1
+const STOCK_IN = 2
+
+export const toyService = {
+  labels,
+  STOCK_IGNORE,
+  STOCK_OUT,
+  STOCK_IN,
+  query,
+  get,
+  remove,
+  save,
+  getEmptyToy,
+  getRandomToy,
+  getDefaultFilter,
+  getFilterFromSearchParams
+  // getSpeedStats,
+  // getVendorStats,
+  // _createBooks,
+};
+
+_createToys();
+
 // For Debug (easy access from console):
 window.cs = toyService;
 
 function query(filterBy = {}) {
   return storageService.query(TOY_KEY).then((toys) => {
-    /**TODO: Update for toys */
-    if (filterBy.txt) {
-      const regExp = new RegExp(filterBy.txt, "i");
-      toys = toys.filter((toy) => regExp.test(car.vendor));
+    if (filterBy.name) {
+      const regExp = new RegExp(filterBy.name, "i");
+      toys = toys.filter((toy) => regExp.test(toy.name));
     }
 
-    if (filterBy.minSpeed) {
-      toys = toys.filter((toy) => car.maxSpeed >= filterBy.minSpeed);
+    if (filterBy.maxPrice && filterBy.maxPrice > 0) {
+      toys = toys.filter((toy) => toy.price <= filterBy.maxPrice);
     }
 
+    if (filterBy.stockStatus && filterBy.stockStatus !== STOCK_IGNORE) {
+      if (filterBy.stockStatus === STOCK_OUT)
+        toys = toys.filter((toy) => toy.stock === 0);
+      else toys = toys.filter((toy) => toy.stock > 0);  //  filtering for toys in stock
+    }
+
+    if(filterBy.label_filter && filterBy.label_filter.length > 0){
+      toys = toys.filter(toy => {
+        for(let filterIndex = 0; filterIndex < filterBy.label_filter.length; filterIndex++){
+          let isMatch = false;
+          for(let toyLabelIndex = 0; toyLabelIndex < toy.labels.length; toyLabelIndex++)
+            if(filterBy.label_filter[filterIndex] === toy.labels[toyLabelIndex])
+              isMatch = true;
+          if(!isMatch)
+            return false;
+        }
+        return true;
+      })
+    }
     return toys;
   });
 }
@@ -71,8 +98,15 @@ function getEmptyToy(name = "", price = "") {
   return { name, price };
 }
 
+function getRandomToy() {
+  return {
+    ...getEmptyToy(),
+    ..._createToy(),
+  };
+}
+
 function getDefaultFilter() {
-  return { txt: "", maxPrice: 0 };
+  return { name: "", maxPrice: 0, stockStatus: -1, label_filter: [] };
 }
 
 function getFilterFromSearchParams(searchParams) {
@@ -114,19 +148,22 @@ function _createToys() {
   let toys = utilService.loadFromStorage(TOY_KEY);
   if (!toys || !toys.length) {
     toys = [];
-    for (let i = 0; i < 20; i++) {
-      const name = utilService.makeLorem(4);
-      toys.push(_createToy(name, utilService.getRandomIntInclusive(50, 300)));
-    }
+    for (let i = 0; i < 20; i++) toys.push(_createToy());
     utilService.saveToStorage(TOY_KEY, toys);
   }
 }
 
-function _createToy(name, maxPrice = 100) {
-  const toy = getEmptyToy(name, maxPrice);
+function _createToy() {
+  const toy = getEmptyToy();
+
   toy.id = utilService.makeId();
+  toy.name = utilService.makeLorem(4);
+  toy.price = utilService.getRandomIntInclusive(50, 300);
+  toy.stock = utilService.getRandomIntInclusive(0, 10);
+  toy.createdAt = new Date().getDate()
+
   /** for each new toy created, select at random between 1 to 4 from the label options and give them to the toy */
-  let labels_copy = {...labels};
+  let labels_copy = [...labels];
   let toy_labels = [];
   for (
     let num_of_labels = utilService.getRandomIntInclusive(1, 4);
@@ -134,15 +171,11 @@ function _createToy(name, maxPrice = 100) {
     num_of_labels--
   ) {
     toy_labels.unshift(
-      labels_copy[
-        utilService.getRandomIntInclusive(0, labels_copy.length - 1)
-      ]
+      labels_copy[utilService.getRandomIntInclusive(0, labels_copy.length - 1)]
     );
-    labels_copy = labels_copy.filter(
-      (label) => label.id != toy_labels[0].id
-    );
+    labels_copy = labels_copy.filter((label) => label !== toy_labels[0]);
   }
-  toy.labels = toy_labels
+  toy.labels = toy_labels;
 
   return toy;
 }

@@ -8,3 +8,9 @@ header.app-header .header-container{
 .header-container nav.app-nav a{
     margin: 1em;
 }
+
+.header-container form{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}

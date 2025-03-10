@@ -1,5 +1,5 @@
 .user-msg {
-    background-color: lightgray;
+    background-color: darkgray !important;
     padding: .5em 1em;
     position: fixed;
     bottom: 1em;
@@ -7,7 +7,7 @@
     color: white;
     font-weight: bold;
     border: 3px solid black;
-    border-radius: 2px;
+    border-radius: 1em;
 }
 
 .user-msg.success {

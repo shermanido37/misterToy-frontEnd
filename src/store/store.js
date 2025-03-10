@@ -1,8 +1,9 @@
 import { createStore, combineReducers} from 'redux'
 import {userReducer} from './reducers/user.reducer.js'
+import {toyReducer} from './reducers/toy.reducer.js'
 
 const rootReducer = combineReducers({
-    // todoModule: todoReducer,
+    toyModule: toyReducer,
     userModule: userReducer
 })
 

@@ -1,0 +1,17 @@
+.toy-filter form{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    place-content: center;
+    margin-bottom: 1em;
+}
+
+.toy-filter form label{
+    display: flex;
+    place-items: center;
+}
+
+.toy-filter form .label-filter-select{
+    color: black;
+    min-width: 20em;
+}

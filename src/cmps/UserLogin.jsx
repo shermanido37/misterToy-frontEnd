@@ -21,30 +21,29 @@ export function UserLogin({ onSetUser }) {
   return (
     <section className="user-login">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Username:</label>
         <input
           type="text"
-          name="username"
+          id="username"
           value={credentials.username}
           onChange={handleChange}
           required
           autoFocus
         />
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Password:</label>
         <input
           type="text"
-          name="password"
+          id="password"
           value={credentials.password}
           onChange={handleChange}
           required
           autoComplete="off"
         />
         <input type="submit" value="Login" />
-        <br />
-        <span>
-          Don't have a user? Sign up <NavLink to="">here</NavLink>
-        </span>
       </form>
+      <span>
+        Don't have a user? Sign up <NavLink to="">here</NavLink>
+      </span>
     </section>
   );
 }

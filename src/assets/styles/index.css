@@ -2,6 +2,14 @@
 @import './base/base.css';
 @import './base/layout.css';
 
+/*pages*/
+@import './pages/Home.css';
+@import './pages/ToyIndex.css';
+
 /*components*/
 @import './cmps/RootCmp.css';
 @import './cmps/AppHeader.css';
+@import './cmps/UserMsg.css';
+@import './cmps/ToyFilter.css';
+@import './cmps/ToyList.css';
+@import './cmps/ToyPreview.css';
