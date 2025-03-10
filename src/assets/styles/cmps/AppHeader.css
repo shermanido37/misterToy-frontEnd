@@ -1,0 +1,10 @@
+header.app-header .header-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-container nav.app-nav a{
+    margin: 1em;
+}

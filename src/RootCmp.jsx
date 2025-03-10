@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { AppHeader } from "./cmps/AppHeader";
+import { ToyIndex } from "./pages/ToyIndex";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/toys" element={<ToyIndex />} />
               </Routes>
             </main>
           </section>
